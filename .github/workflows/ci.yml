@@ -10,34 +10,78 @@ jobs:
     php-lint-and-standards:
         runs-on: ubuntu-latest
         strategy:
+            fail-fast: false
             matrix:
                 php: ['7.4', '8.2']
+
         steps:
-            - name: 🧱 Checkout repository
+            - name: Checkout
               uses: actions/checkout@v4
 
-            - name: 🧰 Setup PHP
+            - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
                   tools: composer
                   coverage: none
 
-            - name: 🧩 Configure Composer plugins
-              run: composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+            # Composer 2 blocca i plugin: abilitiamo l’installer PHPCS
+            - name: Allow Composer plugin (PHPCS installer)
+              run: composer global config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
 
-            - name: 🪶 Install PHPCS & WPCS
+            # Installa PHPCS + WPCS + PHPCSExtra + PHPCSUtils e registra TUTTI i paths
+            - name: Install PHPCS + WPCS (+ Extra + Utils)
+              shell: bash
               run: |
+                  set -euo pipefail
+
                   composer global require --no-interaction --no-progress \
-                    squizlabs/php_codesniffer:^3.9 \
+                    squizlabs/php_codesniffer:^3.13 \
                     wp-coding-standards/wpcs:^3.0 \
                     phpcsstandards/phpcsextra:^1.4 \
                     phpcsstandards/phpcsutils:^1.1
-                  ~/.composer/vendor/bin/phpcs --config-set installed_paths \
-                    ~/.composer/vendor/wp-coding-standards/wpcs,~/.composer/vendor/phpcsstandards/phpcsextra,~/.composer/vendor/phpcsstandards/phpcsutils
 
-            - name: 🧪 PHP Syntax Check
-              run: find . -type f -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 -P4 php -l
+                  COMPOSER_HOME="$(composer global config home --absolute)"
+                  PHPCS="${COMPOSER_HOME}/vendor/bin/phpcs"
+                  WPCS_PATH="${COMPOSER_HOME}/vendor/wp-coding-standards/wpcs"
+                  EXTRA_PATH="${COMPOSER_HOME}/vendor/phpcsstandards/phpcsextra"
+                  UTILS_PATH="${COMPOSER_HOME}/vendor/phpcsstandards/phpcsutils"
 
-            - name: 🔍 PHPCS Validation
-              run: ~/.composer/vendor/bin/phpcs --standard=phpcs.xml.dist .
+                  # Pulisci eventuale config “sporca” del runner
+                  "${PHPCS}" --config-delete installed_paths || true
+
+                  # Registra tutti gli standard richiesti da WPCS 3.x
+                  "${PHPCS}" --config-set installed_paths "${WPCS_PATH},${EXTRA_PATH},${UTILS_PATH}"
+
+            - name: Verify PHPCS standards (installed)
+              shell: bash
+              run: |
+                  COMPOSER_HOME="$(composer global config home --absolute)"
+                  PHPCS="${COMPOSER_HOME}/vendor/bin/phpcs"
+                  "${PHPCS}" -i
+                  "${PHPCS}" --version
+
+            - name: PHP syntax lint (recursive)
+              run: |
+                  find . -type f -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 -P4 php -l
+
+            - name: PHPCBF (auto-fix)
+              shell: bash
+              run: |
+                  COMPOSER_HOME="$(composer global config home --absolute)"
+                  PHPCBF="${COMPOSER_HOME}/vendor/bin/phpcbf"
+                  "${PHPCBF}" --standard=phpcs.xml.dist \
+                      --ignore=vendor/*,node_modules/* \
+                      --extensions=php \
+                  .
+
+            - name: PHPCS (project ruleset)
+              shell: bash
+              run: |
+                  COMPOSER_HOME="$(composer global config home --absolute)"
+                  PHPCS="${COMPOSER_HOME}/vendor/bin/phpcs"
+                  "${PHPCS}" \
+                      --standard=phpcs.xml.dist \
+                      --ignore=vendor/*,node_modules/* \<<<<<
+                      --extensions=php \
+                      .
