@@ -11,7 +11,7 @@
  *
  * @package   CodeCorn\CC_Admin_Popover_Row_Actions
  */
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Definisce una costante solo se non già definita .
@@ -20,11 +20,10 @@ defined('ABSPATH') || exit;
  * @param mixed  $v  Valore della costante ( qualsiasi tipo accettato da define ) .
  * @return bool      true se definita ora , false se già esiste o se define fallisce .
  */
-if (!function_exists('cc_def')) {
-    function cc_def($k, $v)
-    {
-        return !defined($k) && define($k, $v);
-    }
+if ( ! function_exists( 'cc_def' ) ) {
+	function cc_def( $k, $v ) {
+		return ! defined( $k ) && define( $k, $v );
+	}
 }
 
 /** @var non-empty-string $plugin_vers */
@@ -36,15 +35,15 @@ $assets_path = 'codecorn/admin-popover-row-actions/assets';
 /** @var non-empty-string $assets_dir  Percorso assoluto assets */
 $assets_dir = "{$plugin_dir}/{$assets_path}";
 /** @var non-empty-string $assets_url  URL assoluto assets */
-$assets_url = plugins_url($assets_path, __FILE__);
+$assets_url = plugins_url( $assets_path, __FILE__ );
 
-cc_def('CC_APRA_VERS', $plugin_vers);
-cc_def('CC_APRA_SLUG', 'cc-admin-popover-row-actions');
-cc_def('CC_APRA_NS', 'cc_apra');
-cc_def('CC_APRA_DIR', $plugin_dir);
-cc_def('CC_APRA_ASSETS_DIR', $assets_dir);
-cc_def('CC_APRA_ASSETS_URL', $assets_url);
-cc_def('CC_APRA_DEFAULT_POST_TYPES', ['wp_ar_clients', 'wp_ar_requests']); // array OK su PHP 7+.
+cc_def( 'CC_APRA_VERS', $plugin_vers );
+cc_def( 'CC_APRA_SLUG', 'cc-admin-popover-row-actions' );
+cc_def( 'CC_APRA_NS', 'cc_apra' );
+cc_def( 'CC_APRA_DIR', $plugin_dir );
+cc_def( 'CC_APRA_ASSETS_DIR', $assets_dir );
+cc_def( 'CC_APRA_ASSETS_URL', $assets_url );
+cc_def( 'CC_APRA_DEFAULT_POST_TYPES', array( 'wp_ar_clients', 'wp_ar_requests' ) ); // array OK su PHP 7+.
 
 /**
  * ===== Bilateral flags ( defaults da define , i filtri vincono ) =====
@@ -86,22 +85,21 @@ cc_def('CC_APRA_DEFAULT_POST_TYPES', ['wp_ar_clients', 'wp_ar_requests']); // ar
  * @param string|array<string|int|float>|null $csv  Stringa CSV o array già fornito .
  * @return array<int,string>                     Lista normalizzata .
  */
-function cc_apra_csv_list($csv): array
-{
-    if (is_array($csv)) {
-        return array_values(array_filter(array_map('strval', $csv)));
-    }
-    $csv = (string) $csv;
-    if ($csv === '') {
-        return [];
-    }
-    return array_values(
-        array_unique(
-            array_filter(
-                array_map('trim', explode(',', $csv))
-            )
-        )
-    );
+function cc_apra_csv_list( $csv ): array {
+	if ( is_array( $csv ) ) {
+		return array_values( array_filter( array_map( 'strval', $csv ) ) );
+	}
+	$csv = (string) $csv;
+	if ( $csv === '' ) {
+		return array();
+	}
+	return array_values(
+		array_unique(
+			array_filter(
+				array_map( 'trim', explode( ',', $csv ) )
+			)
+		)
+	);
 }
 
 /**
@@ -110,32 +108,31 @@ function cc_apra_csv_list($csv): array
  * @param array<string,string>|string|null $val  Array associativo o JSON string .
  * @return array{ table:string , primaryCell:string , triggerLink:string , rowActions:string }
  */
-function cc_apra_norm_selectors($val): array
-{
-    $defaults = [
-        'table' => '.wp-list-table.table-view-list',
-        'primaryCell' => 'td.column-primary',
-        'triggerLink' => 'a.wp_ar_id_td, .wp_ar-badge',
-        'rowActions' => '.row-actions',
-    ];
+function cc_apra_norm_selectors( $val ): array {
+	$defaults = array(
+		'table'       => '.wp-list-table.table-view-list',
+		'primaryCell' => 'td.column-primary',
+		'triggerLink' => 'a.wp_ar_id_td, .wp_ar-badge',
+		'rowActions'  => '.row-actions',
+	);
 
-    // Supporto define come JSON string .
-    if (is_string($val)) {
-        $dec = json_decode($val, true);
-        if (is_array($dec)) {
-            $val = $dec;
-        }
-    }
+	// Supporto define come JSON string .
+	if ( is_string( $val ) ) {
+		$dec = json_decode( $val, true );
+		if ( is_array( $dec ) ) {
+			$val = $dec;
+		}
+	}
 
-    if (!is_array($val)) {
-        $val = [];
-    }
+	if ( ! is_array( $val ) ) {
+		$val = array();
+	}
 
-    $val = array_intersect_key($val, $defaults);
+	$val = array_intersect_key( $val, $defaults );
 
-    /** @var array{ table:string , primaryCell:string , triggerLink:string , rowActions:string } */
-    $out = $val + $defaults;
-    return $out;
+	/** @var array{ table:string , primaryCell:string , triggerLink:string , rowActions:string } */
+	$out = $val + $defaults;
+	return $out;
 }
 
 /**
@@ -150,80 +147,79 @@ function cc_apra_norm_selectors($val): array
  *   ($name is 'post_types' ? array<int,string> : mixed)
  * )
  */
-function cc_apra_get_flag($name, $default)
-{
-    // leggi eventuale define
-    $defined = null;
-    switch ($name) {
-        case 'enabled':
-            $defined = defined('CC_APRA_ENABLED') ? (bool) CC_APRA_ENABLED : null;
-            break;
+function cc_apra_get_flag( $name, $default ) {
+	// leggi eventuale define
+	$defined = null;
+	switch ( $name ) {
+		case 'enabled':
+			$defined = defined( 'CC_APRA_ENABLED' ) ? (bool) CC_APRA_ENABLED : null;
+			break;
 
-        case 'on_hover':
-            $defined = defined('CC_APRA_ON_HOVER') ? (bool) CC_APRA_ON_HOVER : null;
-            break;
+		case 'on_hover':
+			$defined = defined( 'CC_APRA_ON_HOVER' ) ? (bool) CC_APRA_ON_HOVER : null;
+			break;
 
-        case 'hide_quick_edit':
-            $defined = defined('CC_APRA_HIDE_QUICK_EDIT') ? (bool) CC_APRA_HIDE_QUICK_EDIT : null;
-            break;
+		case 'hide_quick_edit':
+			$defined = defined( 'CC_APRA_HIDE_QUICK_EDIT' ) ? (bool) CC_APRA_HIDE_QUICK_EDIT : null;
+			break;
 
-        case 'post_types':
-            // priorità ai define specifici , altrimenti default globale
-            if (defined('CC_APRA_POST_TYPES')) {
-                $defined = cc_apra_csv_list(CC_APRA_POST_TYPES);
-            } elseif (defined('CC_APRA_DEFAULT_POST_TYPES')) {
-                $defined = (array) constant('CC_APRA_DEFAULT_POST_TYPES');
-            }
-            break;
+		case 'post_types':
+			// priorità ai define specifici , altrimenti default globale
+			if ( defined( 'CC_APRA_POST_TYPES' ) ) {
+				$defined = cc_apra_csv_list( CC_APRA_POST_TYPES );
+			} elseif ( defined( 'CC_APRA_DEFAULT_POST_TYPES' ) ) {
+				$defined = (array) constant( 'CC_APRA_DEFAULT_POST_TYPES' );
+			}
+			break;
 
-        case 'selectors':
-            if (defined('CC_APRA_SELECTORS')) {
-                // accetta array o JSON string nel define
-                $defined = cc_apra_norm_selectors(constant('CC_APRA_SELECTORS'));
-            }
-            break;
-    }
+		case 'selectors':
+			if ( defined( 'CC_APRA_SELECTORS' ) ) {
+				// accetta array o JSON string nel define
+				$defined = cc_apra_norm_selectors( constant( 'CC_APRA_SELECTORS' ) );
+			}
+			break;
+	}
 
-    // Usa $defined se non null, altrimenti $default
-    $base = $defined ?? $default;
+	// Usa $defined se non null, altrimenti $default
+	$base = $defined ?? $default;
 
-    // mappa filtri centralizzata , i filter VINCONO sempre sui define
-    $filter_map = [
-        'enabled' => 'cc_apra_enabled',
-        'on_hover' => 'cc_apra_on_hover',
-        'hide_quick_edit' => 'cc_apra_hide_quick_edit',
-        'post_types' => 'cc_apra_post_types',
-        'selectors' => 'cc_apra_selectors',
-    ];
+	// mappa filtri centralizzata , i filter VINCONO sempre sui define
+	$filter_map = array(
+		'enabled'         => 'cc_apra_enabled',
+		'on_hover'        => 'cc_apra_on_hover',
+		'hide_quick_edit' => 'cc_apra_hide_quick_edit',
+		'post_types'      => 'cc_apra_post_types',
+		'selectors'       => 'cc_apra_selectors',
+	);
 
-    $tag = $filter_map[$name] ?? null;
-    if ($tag) {
-        /**
-         * Filtri di configurazione .
-         * passa anche $screen per i filtri più evoluti sui selectors
-         * 
-         * @filter cc_apra_enabled          bool
-         * @filter cc_apra_on_hover         bool
-         * @filter cc_apra_hide_quick_edit  bool
-         * @filter cc_apra_post_types       array<string>
-         * @filter cc_apra_selectors        array{table:string,primaryCell:string,triggerLink:string,rowActions:string}
-         * 
-         * @param mixed     $value  Valore corrente del flag .
-         * @param WP_Screen $screen Oggetto schermo corrente , utile per personalizzazioni contestuali .
-         * @return mixed
-         */
-        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
-        $base = apply_filters($tag, $base, $screen);
-    }
+	$tag = $filter_map[ $name ] ?? null;
+	if ( $tag ) {
+		/**
+		 * Filtri di configurazione .
+		 * passa anche $screen per i filtri più evoluti sui selectors
+		 *
+		 * @filter cc_apra_enabled          bool
+		 * @filter cc_apra_on_hover         bool
+		 * @filter cc_apra_hide_quick_edit  bool
+		 * @filter cc_apra_post_types       array<string>
+		 * @filter cc_apra_selectors        array{table:string,primaryCell:string,triggerLink:string,rowActions:string}
+		 *
+		 * @param mixed     $value  Valore corrente del flag .
+		 * @param WP_Screen $screen Oggetto schermo corrente , utile per personalizzazioni contestuali .
+		 * @return mixed
+		 */
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$base   = apply_filters( $tag, $base, $screen );
+	}
 
-    // Normalizzazioni finali per sicurezza
-    if ($name === 'post_types') {
-        $base = cc_apra_csv_list($base ?: (defined('CC_APRA_DEFAULT_POST_TYPES') ? constant('CC_APRA_DEFAULT_POST_TYPES') : []));
-    } elseif ($name === 'selectors') {
-        $base = cc_apra_norm_selectors($base);
-    }
+	// Normalizzazioni finali per sicurezza
+	if ( $name === 'post_types' ) {
+		$base = cc_apra_csv_list( $base ?: ( defined( 'CC_APRA_DEFAULT_POST_TYPES' ) ? constant( 'CC_APRA_DEFAULT_POST_TYPES' ) : array() ) );
+	} elseif ( $name === 'selectors' ) {
+		$base = cc_apra_norm_selectors( $base );
+	}
 
-    return $base;
+	return $base;
 }
 
 /**
@@ -234,18 +230,23 @@ function cc_apra_get_flag($name, $default)
  * @param WP_Screen $screen
  * @return void
  */
-add_action('current_screen', function ($screen) {
-    if (!$screen || $screen->base !== 'edit')
-        return;
+add_action(
+	'current_screen',
+	function ( $screen ) {
+		if ( ! $screen || $screen->base !== 'edit' ) {
+			return;
+		}
 
-    $enabled = cc_apra_get_flag('enabled', true);
-    $post_types = cc_apra_get_flag('post_types', constant('CC_APRA_DEFAULT_POST_TYPES'));  // default CPT tuo
+		$enabled    = cc_apra_get_flag( 'enabled', true );
+		$post_types = cc_apra_get_flag( 'post_types', constant( 'CC_APRA_DEFAULT_POST_TYPES' ) );  // default CPT tuo
 
-    if (!$enabled || !in_array($screen->post_type, (array) $post_types, true))
-        return;
+		if ( ! $enabled || ! in_array( $screen->post_type, (array) $post_types, true ) ) {
+			return;
+		}
 
-    add_action('admin_enqueue_scripts', 'cc_apra_enqueue_assets', 20);
-});
+		add_action( 'admin_enqueue_scripts', 'cc_apra_enqueue_assets', 20 );
+	}
+);
 
 /**
  * Enqueue singleton .
@@ -255,65 +256,63 @@ add_action('current_screen', function ($screen) {
  * @param string $hook Hook corrente di enqueue ( non usato ) .
  * @return void
  */
-function cc_apra_enqueue_assets($hook)
-{
-    static $done = false;
-    if ($done) {
-        return;
-    }
-    $done = true;
+function cc_apra_enqueue_assets( $hook ) {
+	static $done = false;
+	if ( $done ) {
+		return;
+	}
+	$done = true;
 
-    // Flags risolte ( filter > define ).
-    /** @var bool $enabled */
-    $enabled = (bool) cc_apra_get_flag('enabled', true);
-    /** @var bool $onHover */
-    $onHover = (bool) cc_apra_get_flag('on_hover', true);
-    /** @var bool $hideQuick */
-    $hideQuick = (bool) cc_apra_get_flag('hide_quick_edit', true);
-    /** @var array<int,string> $postTypes */
-    $postTypes = array_values((array) cc_apra_get_flag('post_types', constant('CC_APRA_DEFAULT_POST_TYPES')));
-    /** @var array{ table:string , primaryCell:string , triggerLink:string , rowActions:string } $selectors */
-    $selectors = cc_apra_get_flag('selectors', cc_apra_norm_selectors([]));
+	// Flags risolte ( filter > define ).
+	/** @var bool $enabled */
+	$enabled = (bool) cc_apra_get_flag( 'enabled', true );
+	/** @var bool $onHover */
+	$onHover = (bool) cc_apra_get_flag( 'on_hover', true );
+	/** @var bool $hideQuick */
+	$hideQuick = (bool) cc_apra_get_flag( 'hide_quick_edit', true );
+	/** @var array<int,string> $postTypes */
+	$postTypes = array_values( (array) cc_apra_get_flag( 'post_types', constant( 'CC_APRA_DEFAULT_POST_TYPES' ) ) );
+	/** @var array{ table:string , primaryCell:string , triggerLink:string , rowActions:string } $selectors */
+	$selectors = cc_apra_get_flag( 'selectors', cc_apra_norm_selectors( array() ) );
 
-    // flags risolte (filter > define)
-    $data = [
-        'enabled' => $enabled,
-        'onHover' => $onHover,
-        'hideQuickEdit' => $hideQuick,
-        'postTypes' => $postTypes,
-        'selectors' => $selectors,
-    ];
+	// flags risolte (filter > define)
+	$data = array(
+		'enabled'       => $enabled,
+		'onHover'       => $onHover,
+		'hideQuickEdit' => $hideQuick,
+		'postTypes'     => $postTypes,
+		'selectors'     => $selectors,
+	);
 
-    // ===== CSS critico =====
-    $critical_path = constant('CC_APRA_ASSETS_DIR') . '/css/critical.css';
-    $critical_css = file_exists($critical_path) ? trim((string) file_get_contents($critical_path)) : '';
-    /**
-     * Permette di modificare il CSS critico iniettato inline .
-     *
-     * @param string $critical_css CSS da iniettare .
-     * @return string
-     */
-    $critical_css = apply_filters('cc_apra_critical_css', $critical_css);
+	// ===== CSS critico =====
+	$critical_path = constant( 'CC_APRA_ASSETS_DIR' ) . '/css/critical.css';
+	$critical_css  = file_exists( $critical_path ) ? trim( (string) file_get_contents( $critical_path ) ) : '';
+	/**
+	 * Permette di modificare il CSS critico iniettato inline .
+	 *
+	 * @param string $critical_css CSS da iniettare .
+	 * @return string
+	 */
+	$critical_css = apply_filters( 'cc_apra_critical_css', $critical_css );
 
-    // Registra ed inietta
-    wp_register_script('cc-apra-pre', constant('CC_APRA_ASSETS_URL') . '/js/pre.js', ['jquery'], constant('CC_APRA_VERS'), true);
-    wp_register_script('cc-apra-first', constant('CC_APRA_ASSETS_URL') . '/js/first.js', ['jquery', 'cc-apra-pre'], constant('CC_APRA_VERS'), true);
-    wp_register_script('cc-apra-init', constant('CC_APRA_ASSETS_URL') . '/js/init.js', ['jquery', 'cc-apra-first'], constant('CC_APRA_VERS'), true);
+	// Registra ed inietta
+	wp_register_script( 'cc-apra-pre', constant( 'CC_APRA_ASSETS_URL' ) . '/js/pre.js', array( 'jquery' ), constant( 'CC_APRA_VERS' ), true );
+	wp_register_script( 'cc-apra-first', constant( 'CC_APRA_ASSETS_URL' ) . '/js/first.js', array( 'jquery', 'cc-apra-pre' ), constant( 'CC_APRA_VERS' ), true );
+	wp_register_script( 'cc-apra-init', constant( 'CC_APRA_ASSETS_URL' ) . '/js/init.js', array( 'jquery', 'cc-apra-first' ), constant( 'CC_APRA_VERS' ), true );
 
-    // Localize opzioni ai JS
-    wp_localize_script('cc-apra-pre', 'CC_APRA', $data);
+	// Localize opzioni ai JS
+	wp_localize_script( 'cc-apra-pre', 'CC_APRA', $data );
 
-    // Enqueue
-    wp_enqueue_script('cc-apra-pre');
-    wp_enqueue_script('cc-apra-first');
-    wp_enqueue_script('cc-apra-init');
+	// Enqueue
+	wp_enqueue_script( 'cc-apra-pre' );
+	wp_enqueue_script( 'cc-apra-first' );
+	wp_enqueue_script( 'cc-apra-init' );
 
-    // CSS inline come singleton
-    if ($critical_css) {
-        $style_handle = 'cc-apra-critical';     // handle “fittizio” : agganciamo al core per garantire stampa nel footer admin
-        wp_register_style($style_handle, false, [], constant('CC_APRA_VERS'));
-        wp_enqueue_style($style_handle);
-        wp_add_inline_style($style_handle, $critical_css);
-    }
-
+	// CSS inline come singleton
+	if ( $critical_css ) {
+		$style_handle = 'cc-apra-critical';     // handle “fittizio” : agganciamo al core per garantire stampa nel footer admin
+		wp_register_style( $style_handle, false, array(), constant( 'CC_APRA_VERS' ) );
+		wp_enqueue_style( $style_handle );
+		wp_add_inline_style( $style_handle, $critical_css );
+	}
 }

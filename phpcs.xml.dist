@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ruleset name="CC Admin Popover Row Actions">
+  <description>
+    CodeCorn™ relaxed ruleset — based on WordPress-Core, aligned to CodeCorn coding style.
+  </description>
+
+  <!-- 📦 Base ruleset -->
+  <rule ref="WordPress-Core">
+    <!-- ❌ Disabilita regole non desiderate -->
+    <exclude name="WordPress.PHP.YodaConditions"/>
+    <exclude name="Universal.Operators.DisallowShortTernary"/>
+    <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase"/>
+    <exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
+    <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+  </rule>
+
+  <!-- 🎨 Configurazione generale -->
+  <config name="testVersion" value="7.4-8.3"/>
+  <arg name="extensions" value="php"/>
+  <arg name="colors"/>
+  <arg value="p"/>
+
+  <!-- 🧩 Altri miglioramenti di compatibilità -->
+  <exclude name="Generic.ControlStructures.InlineControlStructure"/>
+  <exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
+  <exclude name="WordPress.WhiteSpace.PrecisionAlignment"/>
+
+  <!-- 📊 Report -->
+  <arg name="report" value="full"/>
+</ruleset>
