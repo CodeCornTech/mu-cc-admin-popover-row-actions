@@ -3,9 +3,13 @@
 <!-- Badges -->
 <p align="left">
 
-[![@codecorn/euro-plate-validator](https://img.shields.io/badge/CODECORN-EURO--PLATE--VALIDATOR-gold?style=for-the-badge&logo=vercel)](https://img.shields.io/badge/code%20style-WordPress-21759b)
-[![@codecorn/euro-plate-validator](https://img.shields.io/badge/code%20style-WordPress-21759b?style=for-the-badge&logo=wordpress)](https://img.shields.io/badge/code%20style-WordPress-21759b)
-[![GitHub stars](https://img.shields.io/github/stars/CodeCornTech/euro-plate-validator?style=for-the-badge&logo=github)](https://img.shields.io/badge/code%20style-WordPress-21759b)
+<!-- Latest Release -->
+<a href="https://github.com/CodeCornTech/mu-cc-admin-popover-row-actions/releases/latest">
+    <img alt="Latest Release" src="https://img.shields.io/github/v/release/CodeCornTech/mu-cc-admin-popover-row-actions?display_name=tag&style=for-the-badge"/>
+</a>
+
+[![CodeCornTech/mu-cc-admin-popover-actions](https://img.shields.io/badge/code%20style-WordPress-21759b?style=for-the-badge&logo=wordpress)](https://img.shields.io/badge/code%20style-WordPress-21759b)
+[![GitHub stars](https://img.shields.io/github/stars/CodeCornTech/mu-cc-admin-popover-row-actions?style=for-the-badge&logo=github)](https://img.shields.io/badge/code%20style-WordPress-21759b)
 
   <!-- Version & License -->
   <a href="https://img.shields.io/badge/code%20style-WordPress-21759b/releases">
@@ -14,7 +18,20 @@
   <a href="https://github.com/CodeCornTech/mu-cc-admin-popover-row-actions/blob/main/LICENSE">
     <img alt="License" src="https://img.shields.io/github/license/CodeCornTech/mu-cc-admin-popover-row-actions.svg">
   </a>
-  <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/CodeCornTech/mu-cc-admin-popover-row-actions/ci.yml?branch=main">
+  <a href="https://github.com/CodeCornTech/mu-cc-admin-popover-row-actions/releases">
+    <img alt="Total Downloads" src="https://img.shields.io/github/downloads/CodeCornTech/mu-cc-admin-popover-row-actions/total">
+  </a>
+  <a href="https://github.com/CodeCornTech/mu-cc-admin-popover-row-actions/releases/latest">
+    <img alt="Release date" src="https://img.shields.io/github/release-date/CodeCornTech/mu-cc-admin-popover-row-actions">
+  </a>
+
+  <!-- Workflows status -->
+  <a href="https://github.com/CodeCornTech/mu-cc-admin-popover-row-actions/actions/workflows/ci.yml">
+    <img alt="CI Status" src="https://img.shields.io/github/actions/workflow/status/CodeCornTech/mu-cc-admin-popover-row-actions/ci.yml?branch=main&label=CI">
+  </a>
+  <a href="https://github.com/CodeCornTech/mu-cc-admin-popover-row-actions/actions/workflows/release.yml">
+    <img alt="Release Workflow" src="https://img.shields.io/github/actions/workflow/status/CodeCornTech/mu-cc-admin-popover-row-actions/release.yml?branch=main&label=Release">
+  </a>
   <img alt="Size" src="https://img.shields.io/badge/assets-size%20tiny-lightgrey">
 
   <!-- WordPress & PHP targets -->

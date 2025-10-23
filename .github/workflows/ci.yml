@@ -10,8 +10,10 @@ jobs:
   php-lint-and-standards:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         php: [ '7.4', '8.2' ]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,18 +25,34 @@ jobs:
           tools: composer
           coverage: none
 
+      - name: Setup Composer allow-plugins
+        run: |
+          composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+
       - name: Install PHPCS + WordPress Coding Standards
         run: |
           composer global require --no-interaction --no-progress squizlabs/php_codesniffer:^3.9 wp-coding-standards/wpcs:^3.0
-          phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
+          COMPOSER_HOME="$(composer global config home --absolute)"
+          PHPCS="${COMPOSER_HOME}/vendor/bin/phpcs"
+          WPCS_PATH="${COMPOSER_HOME}/vendor/wp-coding-standards/wpcs"
+          "${PHPCS}" --config-set installed_paths "${WPCS_PATH}"
 
-      - name: PHP syntax lint ( recursive )
+      - name: Verify PHPCS standards (installed)
+        run: |
+          COMPOSER_HOME="$(composer global config home --absolute)"
+          PHPCS="${COMPOSER_HOME}/vendor/bin/phpcs"
+          "${PHPCS}" -i
+          "${PHPCS}" --version
+
+      - name: PHP syntax lint (recursive)
         run: |
           find . -type f -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 -P4 php -l
 
-      - name: PHPCS ( WordPress ruleset )
+      - name: PHPCS (WordPress ruleset)
         run: |
-          ~/.composer/vendor/bin/phpcs -p \
+          COMPOSER_HOME="$(composer global config home --absolute)"
+          PHPCS="${COMPOSER_HOME}/vendor/bin/phpcs"
+          "${PHPCS}" -p \
             --standard=WordPress \
             --ignore=vendor/*,node_modules/* \
             --extensions=php \
