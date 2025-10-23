@@ -1,33 +1,37 @@
 name: 🚀 Release
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
+    push:
+        tags:
+            - 'v*.*.*'
+permissions:
+    contents: write 
+    actions: read
+    checks: read
 
 jobs:
-  build-and-release:
-    runs-on: ubuntu-latest
+    build-and-release:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: 🧱 Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: 🧱 Checkout
+              uses: actions/checkout@v4
 
-      - name: 🧰 Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.2"
-          tools: composer
-          coverage: none
+            - name: 🧰 Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  tools: composer
+                  coverage: none
 
-      - name: 🧩 Prepare release package
-        run: |
-          mkdir -p build
-          zip -r build/mu-cc-admin-popover-row-actions.zip mu-plugins LICENSE README.md phpcs.xml.dist
+            - name: 🧩 Prepare release package
+              run: |
+                  mkdir -p build
+                  zip -r build/mu-cc-admin-popover-row-actions.zip mu-plugins LICENSE README.md phpcs.xml.dist
 
-      - name: 🪄 Create GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: build/mu-cc-admin-popover-row-actions.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: 🪄 Create GitHub release
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: build/mu-cc-admin-popover-row-actions.zip
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
