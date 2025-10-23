@@ -73,7 +73,7 @@ jobs:
                   "${PHPCBF}" --standard=phpcs.xml.dist \
                       --ignore=vendor/*,node_modules/* \
                       --extensions=php \
-                  .
+                    .
 
             - name: PHPCS (project ruleset)
               shell: bash
