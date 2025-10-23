@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'           # es. v1.0.1
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versione da rilasciare ( es. 1.0.1 )'
+        required: true
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version
+        id: ver
+        shell: bash
+        run: |
+          if [[ -n "${{ github.event.inputs.version }}" ]]; then
+            VER="${{ github.event.inputs.version }}"
+          else
+            # tag push es. refs/tags/v1.0.1
+            VER="${GITHUB_REF##*/v}"
+          fi
+          echo "ver=$VER" >> "$GITHUB_OUTPUT"
+          echo "Version → $VER"
+
+      - name: Validate plugin header version
+        shell: bash
+        run: |
+          HDR_VER="$(grep -Eo '^\s*\*\s*Version:\s*[0-9]+\.[0-9]+\.[0-9]+' cc-admin-popover-row-actions.php | sed -E 's/.*Version:\s*//')"
+          echo "Header Version → $HDR_VER"
+          if [[ "$HDR_VER" != "${{ steps.ver.outputs.ver }}" ]]; then
+            echo "❌ Versione header ($HDR_VER) diversa da tag / input (${{ steps.ver.outputs.ver }})"
+            exit 1
+          fi
+
+      - name: Build ZIP ( MU-plugins layout )
+        shell: bash
+        run: |
+          set -euo pipefail
+          VER="${{ steps.ver.outputs.ver }}"
+          DIST="dist"
+          PKG="cc-admin-popover-row-actions-${VER}.zip"
+          mkdir -p "$DIST"/mu-plugins/codecorn/admin-popover-row-actions/assets/{css,js}
+
+          # copia file plugin root
+          cp cc-admin-popover-row-actions.php "$DIST"/mu-plugins/
+
+          # copia assets ( adatta se hai altre subdir )
+          rsync -av --delete codecorn/admin-popover-row-actions/assets/ "$DIST"/mu-plugins/codecorn/admin-popover-row-actions/assets/ >/dev/null
+
+          ( cd "$DIST" && zip -r "../${PKG}" mu-plugins >/dev/null )
+          echo "Built → ${PKG}"
+          ls -lh "${PKG}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mu-cc-admin-popover-row-actions
+          path: |
+            *.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.ver }}
+          name: v${{ steps.ver.outputs.ver }}
+          draft: false
+          prerelease: false
+          files: |
+            *.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

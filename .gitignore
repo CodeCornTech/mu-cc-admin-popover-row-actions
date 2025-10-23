@@ -47,3 +47,11 @@ wp-config.php
 # uncomment the next line
 #/wp-content/themes
 /.vscode
+_STASH/**
+
+
+dist/
+*.zip
+vendor/
+node_modules/
+.DS_Store

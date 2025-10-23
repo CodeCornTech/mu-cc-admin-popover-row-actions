@@ -1,0 +1,107 @@
+/* Nasconde le row-actions native (riusate dentro il popover) */
+.wp-list-table .row-actions {
+    display: none !important;
+}
+
+/* Trigger */
+.wp-list-table .column-primary .cc-popover-trigger {
+    position: relative;
+    cursor: pointer;
+}
+
+/* Popover */
+.cc-popover {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10000;
+    min-width: 220px;
+    max-width: 280px;
+    margin-top: 6px;
+    padding: 8px 10px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    display: none;
+}
+.cc-popover[data-open='true'] {
+    display: block;
+}
+
+/* Freccia */
+.cc-popover::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 16px;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    transform: rotate(45deg);
+}
+
+/* Azioni pill */
+.cc-popover .cc-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.cc-popover .cc-actions a,
+.cc-popover .cc-actions button.button-link {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    background: #f7f7f7;
+    line-height: 1.2;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.cc-popover .cc-actions a:hover,
+.cc-popover .cc-actions button.button-link:hover {
+    background: #fff;
+    border-color: #cfcfcf;
+}
+
+/* Danger per cestino */
+.cc-popover .cc-actions a.submitdelete {
+    border-color: #efcaca;
+    background: #fdeeee;
+}
+.cc-popover .cc-actions a.submitdelete:hover {
+    background: #fff5f5;
+    border-color: #f1bcbc;
+}
+
+/* Mobile safe */
+@media (max-width: 782px) {
+    .cc-popover {
+        position: fixed;
+        left: 12px !important;
+        right: 12px !important;
+        top: auto !important;
+        bottom: 12px !important;
+        margin-top: 0;
+    }
+    .cc-popover::before {
+        display: none;
+    }
+}
+
+/* Focus visivo sul primo span (accessibilità + highlight) */
+a.cc-popover-trigger:focus > span:first-child {
+    box-shadow: 0 0 0 2px #2271b14a;
+    outline: 4px solid #3582c466;
+}
+
+/* Rimuove il focus nativo dal link per evitare doppio contorno */
+a.cc-popover-trigger:focus {
+    box-shadow: unset !important;
+    outline: unset !important;
+}
