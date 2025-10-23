@@ -82,6 +82,6 @@ jobs:
                   PHPCS="${COMPOSER_HOME}/vendor/bin/phpcs"
                   "${PHPCS}" \
                       --standard=phpcs.xml.dist \
-                      --ignore=vendor/*,node_modules/* \<<<<<
+                      --ignore=vendor/*,node_modules/* \
                       --extensions=php \
                       .
