@@ -7,13 +7,14 @@
 <a href="https://github.com/CodeCornTech/mu-cc-admin-popover-row-actions/releases/latest">
     <img alt="Latest Release" src="https://img.shields.io/github/v/release/CodeCornTech/mu-cc-admin-popover-row-actions?display_name=tag&style=for-the-badge"/>
 </a>
-
+  <img alt="WordPress" src="https://img.shields.io/badge/WordPress-6.x%20tested-21759B?style=for-the-badge&logo=wordpress&logoColor=white">
+  
 [![CodeCornTech/mu-cc-admin-popover-actions](https://img.shields.io/badge/code%20style-WordPress-21759b?style=for-the-badge&logo=wordpress)](https://img.shields.io/badge/code%20style-WordPress-21759b)
 [![GitHub stars](https://img.shields.io/github/stars/CodeCornTech/mu-cc-admin-popover-row-actions?style=for-the-badge&logo=github)](https://img.shields.io/badge/code%20style-WordPress-21759b)
 
   <!-- Version & License -->
   <a href="https://img.shields.io/badge/code%20style-WordPress-21759b/releases">
-    <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-blue.svg">
+    <img alt="Version" src="https://img.shields.io/badge/version-1.0.2-blue.svg">
   </a>
   <a href="https://github.com/CodeCornTech/mu-cc-admin-popover-row-actions/blob/main/LICENSE">
     <img alt="License" src="https://img.shields.io/github/license/CodeCornTech/mu-cc-admin-popover-row-actions.svg">
@@ -35,7 +36,7 @@
   <img alt="Size" src="https://img.shields.io/badge/assets-size%20tiny-lightgrey">
 
   <!-- WordPress & PHP targets -->
-  <img alt="WordPress" src="https://img.shields.io/badge/wordpress-6.x-tested-blue">
+
   <img alt="Requires at least" src="https://img.shields.io/badge/requires%20WP-5.8+-informational">
   <img alt="PHP" src="https://img.shields.io/badge/PHP-7.4%2B%20%7C%208.x-777bb3">
 

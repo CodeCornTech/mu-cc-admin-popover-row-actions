@@ -3,7 +3,7 @@
  * Plugin Name: CC Admin Popover Row Actions
  * Plugin URI:  https://github.com/CodeCornTech/mu-cc-admin-popover-row-actions
  * Description: Converte le row-actions della WP List Table in un popover apribile dal badge ID , con flag bilaterali ( define + filter ) e asset singleton .
- * Version:     1.0.1
+ * Version:     1.0.2
  * Author:      CodeCorn™
  * Author URI:  https://github.com/CodeCornTech
  * License:     MIT
@@ -27,7 +27,7 @@ if ( ! function_exists( 'cc_def' ) ) {
 }
 
 /** @var non-empty-string $plugin_vers */
-$plugin_vers = '1.0.1';
+$plugin_vers = '1.0.2';
 /** @var non-empty-string $plugin_dir  Percorso assoluto directory del plugin */
 $plugin_dir = __DIR__;
 /** @var non-empty-string $assets_path Path relativo degli assets dentro il plugin */
